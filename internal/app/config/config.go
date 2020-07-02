@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"sync"
@@ -64,4 +65,55 @@ type Log struct {
 type Config struct {
 	PrintConfig bool
 	Log         Log
+	Gorm        Gorm
+	MySQL       MySQL
+	Postgres    Postgres
+	Sqlite3     Sqlite3
+}
+
+// Gorm gorm配置参数
+type Gorm struct {
+	Debug             bool
+	DBType            string
+	MaxLifetime       int
+	MaxOpenConns      int
+	MaxIdleConns      int
+	TablePrefix       string
+	EnableAutoMigrate bool
+}
+
+// MySQL mysql配置参数
+type MySQL struct {
+	Host       string
+	Port       int
+	User       string
+	Password   string
+	DBName     string
+	Parameters string
+}
+
+// Postgres postgres配置参数
+type Postgres struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBName   string
+	SSLMode  string
+}
+
+// DSN 数据库连接串
+func (a Postgres) DSN() string {
+	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s",
+		a.Host, a.Port, a.User, a.DBName, a.Password, a.SSLMode)
+}
+
+// Sqlite3 sqlite3配置参数
+type Sqlite3 struct {
+	Path string
+}
+
+// DSN 数据库连接串
+func (a Sqlite3) DSN() string {
+	return a.Path
 }

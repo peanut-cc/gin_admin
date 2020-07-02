@@ -8,6 +8,7 @@ require (
 	github.com/fatih/camelcase v1.0.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/google/uuid v1.1.1
+	github.com/jinzhu/gorm v1.9.14 // indirect
 	github.com/json-iterator/go v1.1.10
 	github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 	github.com/sirupsen/logrus v1.6.0
