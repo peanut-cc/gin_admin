@@ -63,12 +63,44 @@ type Log struct {
 }
 
 type Config struct {
+	RunMode     string
 	PrintConfig bool
+	HTTP        HTTP
 	Log         Log
 	Gorm        Gorm
 	MySQL       MySQL
 	Postgres    Postgres
 	Sqlite3     Sqlite3
+	JWTAuth     JWTAuth
+	Redis       Redis
+}
+
+// HTTP http配置参数
+type HTTP struct {
+	Host             string
+	Port             int
+	CertFile         string
+	KeyFile          string
+	ShutdownTimeout  int
+	MaxContentLength int64
+}
+
+// JWTAuth 用户认证
+type JWTAuth struct {
+	Enable        bool
+	SigningMethod string
+	SigningKey    string
+	Expired       int
+	Store         string
+	FilePath      string
+	RedisDB       int
+	RedisPrefix   string
+}
+
+// Redis redis配置参数
+type Redis struct {
+	Addr     string
+	Password string
 }
 
 // Gorm gorm配置参数
@@ -90,6 +122,12 @@ type MySQL struct {
 	Password   string
 	DBName     string
 	Parameters string
+}
+
+// DSN 数据库连接串
+func (a MySQL) DSN() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s",
+		a.User, a.Password, a.Host, a.Port, a.DBName, a.Parameters)
 }
 
 // Postgres postgres配置参数

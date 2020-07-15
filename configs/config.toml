@@ -1,4 +1,5 @@
-
+# 运行模式(debug:调试,test:测试,release:正式)
+RunMode = "release"
 
 
 # 启动时是否打印配置参数
@@ -19,7 +20,7 @@ OutputFile = "logs/gin_admin.log"
 # 是否开启调试模式
 Debug = true
 # 数据库类型(目前支持的数据库类型：mysql/sqlite3/postgres)
-DBType = "sqlite3"
+DBType = "mysql"
 # 设置连接可以重用的最长时间(单位：秒)
 MaxLifetime = 7200
 # 设置数据库的最大打开连接数
@@ -33,7 +34,7 @@ EnableAutoMigrate = true
 
 [MySQL]
 # 连接地址
-Host = "127.0.0.1"
+Host = "10.211.55.3"
 # 连接端口
 Port= 3306
 # 用户名
@@ -62,3 +63,30 @@ SSLMode = "disable"
 [Sqlite3]
 # 数据库路径
 Path = "data/gin-admin.db"
+
+
+[JWTAuth]
+# 是否启用
+Enable = true
+# 签名方式(支持：HS512/HS384/HS512)
+SigningMethod = "HS512"
+# 签名key
+SigningKey = "gin-admin"
+# 过期时间（单位秒）
+Expired = 7200
+# 存储(支持：file/redis)
+Store = "file"
+# 文件路径
+FilePath = "data/jwt_auth.db"
+# redis数据库(如果存储方式是redis，则指定存储的数据库)
+RedisDB = 10
+# 存储到redis数据库中的键名前缀
+RedisPrefix = "auth_"
+
+
+# redis配置信息
+[Redis]
+# 地址
+Addr = "10.211.55.3"
+# 密码
+Password = ""

@@ -34,6 +34,13 @@ type options struct {
 // Option 定义参数项
 type Option func(*options)
 
+// SetSigningMethod 设定签名方式
+func SetSigningMethod(method jwt.SigningMethod) Option {
+	return func(o *options) {
+		o.signingMethod = method
+	}
+}
+
 // SetSigningKey 设定签名key
 func SetSigningKey(key interface{}) Option {
 	return func(o *options) {
@@ -78,12 +85,14 @@ type JWTAuth struct {
 func (a *JWTAuth) GenerateToken(ctx context.Context, userID string) (auth.TokenInfo, error) {
 	now := time.Now()
 	expiresAt := now.Add(time.Duration(a.opts.expired) * time.Second).Unix()
+
 	token := jwt.NewWithClaims(a.opts.signingMethod, &jwt.StandardClaims{
 		IssuedAt:  now.Unix(),
 		ExpiresAt: expiresAt,
 		NotBefore: now.Unix(),
 		Subject:   userID,
 	})
+
 	tokenString, err := token.SignedString(a.opts.signingKey)
 	if err != nil {
 		return nil, err
