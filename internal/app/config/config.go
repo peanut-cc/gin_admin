@@ -65,6 +65,7 @@ type Log struct {
 type Config struct {
 	RunMode     string
 	PrintConfig bool
+	Root        Root
 	HTTP        HTTP
 	Log         Log
 	Gorm        Gorm
@@ -73,6 +74,13 @@ type Config struct {
 	Sqlite3     Sqlite3
 	JWTAuth     JWTAuth
 	Redis       Redis
+}
+
+// Root root用户
+type Root struct {
+	UserName string
+	Password string
+	RealName string
 }
 
 // HTTP http配置参数

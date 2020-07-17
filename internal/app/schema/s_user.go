@@ -1,10 +1,29 @@
 package schema
 
 import (
+	"context"
 	"time"
+
+	"github.com/peanut-pg/gin_admin/internal/app/config"
 
 	"github.com/peanut-pg/gin_admin/pkg/util"
 )
+
+// GetRootUser 获取root用户
+func GetRootUser() *User {
+	user := config.C.Root
+	return &User{
+		ID:       user.UserName,
+		UserName: user.UserName,
+		RealName: user.RealName,
+		Password: util.MD5HashString(user.Password),
+	}
+}
+
+// CheckIsRootUser 检查是否是root用户
+func CheckIsRootUser(ctx context.Context, userID string) bool {
+	return GetRootUser().ID == userID
+}
 
 // User 用户对象
 type User struct {

@@ -90,3 +90,11 @@ RedisPrefix = "auth_"
 Addr = "10.211.55.3"
 # 密码
 Password = ""
+
+[Root]
+# 登录用户名
+UserName = "root"
+# 登录密码
+Password = "abc-123"
+# 显示的真实姓名
+RealName = "超级管理员"
