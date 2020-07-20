@@ -1,5 +1,28 @@
 package entity
 
+import (
+	"context"
+
+	"github.com/jinzhu/gorm"
+	"github.com/peanut-pg/gin_admin/internal/app/schema"
+	"github.com/peanut-pg/gin_admin/pkg/util"
+)
+
+// GetRoleMenuDB 角色菜单
+func GetRoleMenuDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+	return GetDBWithModel(ctx, defDB, new(RoleMenu))
+}
+
+// SchemaRoleMenu 角色菜单
+type SchemaRoleMenu schema.RoleMenu
+
+// ToRoleMenu 转换为角色菜单实体
+func (a SchemaRoleMenu) ToRoleMenu() *RoleMenu {
+	item := new(RoleMenu)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
 // RoleMenu 角色菜单实体
 type RoleMenu struct {
 	Model
@@ -11,4 +34,23 @@ type RoleMenu struct {
 // TableName 表名
 func (a RoleMenu) TableName() string {
 	return a.Model.TableName("role_menu")
+}
+
+// ToSchemaRoleMenu 转换为角色菜单对象
+func (a RoleMenu) ToSchemaRoleMenu() *schema.RoleMenu {
+	item := new(schema.RoleMenu)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
+// RoleMenus 角色菜单列表
+type RoleMenus []*RoleMenu
+
+// ToSchemaRoleMenus 转换为角色菜单对象列表
+func (a RoleMenus) ToSchemaRoleMenus() []*schema.RoleMenu {
+	list := make([]*schema.RoleMenu, len(a))
+	for i, item := range a {
+		list[i] = item.ToSchemaRoleMenu()
+	}
+	return list
 }

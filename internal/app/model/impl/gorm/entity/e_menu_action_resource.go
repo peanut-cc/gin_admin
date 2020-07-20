@@ -1,5 +1,28 @@
 package entity
 
+import (
+	"context"
+
+	"github.com/jinzhu/gorm"
+	"github.com/peanut-pg/gin_admin/internal/app/schema"
+	"github.com/peanut-pg/gin_admin/pkg/util"
+)
+
+// GetMenuActionResourceDB 菜单动作关联资源
+func GetMenuActionResourceDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+	return GetDBWithModel(ctx, defDB, new(MenuActionResource))
+}
+
+// SchemaMenuActionResource 菜单动作关联资源
+type SchemaMenuActionResource schema.MenuActionResource
+
+// ToMenuActionResource 转换为菜单动作关联资源实体
+func (a SchemaMenuActionResource) ToMenuActionResource() *MenuActionResource {
+	item := new(MenuActionResource)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
 // MenuActionResource 菜单动作关联资源实体
 type MenuActionResource struct {
 	Model
@@ -11,4 +34,23 @@ type MenuActionResource struct {
 // TableName 表名
 func (a MenuActionResource) TableName() string {
 	return a.Model.TableName("menu_action_resource")
+}
+
+// ToSchemaMenuActionResource 转换为菜单动作关联资源对象
+func (a MenuActionResource) ToSchemaMenuActionResource() *schema.MenuActionResource {
+	item := new(schema.MenuActionResource)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
+// MenuActionResources 菜单动作关联资源列表
+type MenuActionResources []*MenuActionResource
+
+// ToSchemaMenuActionResources 转换为菜单动作关联资源对象列表
+func (a MenuActionResources) ToSchemaMenuActionResources() []*schema.MenuActionResource {
+	list := make([]*schema.MenuActionResource, len(a))
+	for i, item := range a {
+		list[i] = item.ToSchemaMenuActionResource()
+	}
+	return list
 }

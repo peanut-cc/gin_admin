@@ -1,5 +1,10 @@
 package entity
 
+import (
+	"github.com/peanut-pg/gin_admin/internal/app/schema"
+	"github.com/peanut-pg/gin_admin/pkg/util"
+)
+
 // Demo demo实体
 type Demo struct {
 	Model
@@ -13,4 +18,23 @@ type Demo struct {
 // TableName 表名
 func (a Demo) TableName() string {
 	return a.Model.TableName("demo")
+}
+
+// ToSchemaDemo 转换为demo对象
+func (a Demo) ToSchemaDemo() *schema.Demo {
+	item := new(schema.Demo)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
+// Demos demo列表
+type Demos []*Demo
+
+// ToSchemaDemos 转换为demo对象列表
+func (a Demos) ToSchemaDemos() []*schema.Demo {
+	list := make([]*schema.Demo, len(a))
+	for i, item := range a {
+		list[i] = item.ToSchemaDemo()
+	}
+	return list
 }

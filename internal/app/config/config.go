@@ -54,6 +54,11 @@ func PrintWithJSON() {
 	}
 }
 
+// IsDebugMode 是否是debug模式
+func (c *Config) IsDebugMode() bool {
+	return c.RunMode == "debug"
+}
+
 // Log 日志配置参数
 type Log struct {
 	Level      int
@@ -74,6 +79,14 @@ type Config struct {
 	Sqlite3     Sqlite3
 	JWTAuth     JWTAuth
 	Redis       Redis
+	RateLimiter RateLimiter
+}
+
+// RateLimiter 请求频率限制配置参数
+type RateLimiter struct {
+	Enable  bool
+	Count   int64
+	RedisDB int
 }
 
 // Root root用户

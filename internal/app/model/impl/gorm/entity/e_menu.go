@@ -1,5 +1,30 @@
 package entity
 
+import (
+	"context"
+
+	"github.com/peanut-pg/gin_admin/pkg/util"
+
+	"github.com/peanut-pg/gin_admin/internal/app/schema"
+
+	"github.com/jinzhu/gorm"
+)
+
+// GetMenuDB 获取菜单存储
+func GetMenuDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+	return GetDBWithModel(ctx, defDB, new(Menu))
+}
+
+// SchemaMenu 菜单对象
+type SchemaMenu schema.Menu
+
+// ToMenu 转换为菜单实体
+func (a SchemaMenu) ToMenu() *Menu {
+	item := new(Menu)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
 // Menu 菜单实体
 type Menu struct {
 	Model
@@ -18,4 +43,23 @@ type Menu struct {
 // TableName 表名
 func (a Menu) TableName() string {
 	return a.Model.TableName("menu")
+}
+
+// ToSchemaMenu 转换为菜单对象
+func (a Menu) ToSchemaMenu() *schema.Menu {
+	item := new(schema.Menu)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
+// Menus 菜单实体列表
+type Menus []*Menu
+
+// ToSchemaMenus 转换为菜单对象列表
+func (a Menus) ToSchemaMenus() []*schema.Menu {
+	list := make([]*schema.Menu, len(a))
+	for i, item := range a {
+		list[i] = item.ToSchemaMenu()
+	}
+	return list
 }

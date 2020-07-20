@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"github.com/peanut-pg/gin_admin/internal/app/api"
 	"github.com/peanut-pg/gin_admin/pkg/auth"
 )
 
@@ -19,12 +20,13 @@ type IRouter interface {
 
 // Router 路由管理器
 type Router struct {
-	Auth auth.Auther
+	Auth    auth.Auther
+	UserAPI *api.User
 }
 
 // Register 注册路由
 func (a *Router) Register(app *gin.Engine) error {
-	//a.RegisterAPI(app)
+	a.RegisterAPI(app)
 	return nil
 }
 

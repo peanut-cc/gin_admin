@@ -1,5 +1,28 @@
 package entity
 
+import (
+	"context"
+
+	"github.com/jinzhu/gorm"
+	"github.com/peanut-pg/gin_admin/internal/app/schema"
+	"github.com/peanut-pg/gin_admin/pkg/util"
+)
+
+// GetMenuActionDB 菜单动作
+func GetMenuActionDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+	return GetDBWithModel(ctx, defDB, new(MenuAction))
+}
+
+// SchemaMenuAction 菜单动作
+type SchemaMenuAction schema.MenuAction
+
+// ToMenuAction 转换为菜单动作实体
+func (a SchemaMenuAction) ToMenuAction() *MenuAction {
+	item := new(MenuAction)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
 // MenuAction 菜单动作实体
 type MenuAction struct {
 	Model
@@ -11,4 +34,23 @@ type MenuAction struct {
 // TableName 表名
 func (a MenuAction) TableName() string {
 	return a.Model.TableName("menu_action")
+}
+
+// ToSchemaMenuAction 转换为菜单动作对象
+func (a MenuAction) ToSchemaMenuAction() *schema.MenuAction {
+	item := new(schema.MenuAction)
+	util.StructMapToStruct(a, item)
+	return item
+}
+
+// MenuActions 菜单动作列表
+type MenuActions []*MenuAction
+
+// ToSchemaMenuActions 转换为菜单动作对象列表
+func (a MenuActions) ToSchemaMenuActions() []*schema.MenuAction {
+	list := make([]*schema.MenuAction, len(a))
+	for i, item := range a {
+		list[i] = item.ToSchemaMenuAction()
+	}
+	return list
 }
