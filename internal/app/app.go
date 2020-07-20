@@ -55,11 +55,13 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 	// 初始化日志模块
 	loggerCleanFunc, err := InitLogger()
 	if err != nil {
+		logger.Printf(ctx, "%s", err)
 		return nil, err
 	}
 	// 初始化依赖注入器
 	injector, injectorCleanFunc, err := injector.BuildInjector()
 	if err != nil {
+		logger.Printf(ctx, "%s", err)
 		return nil, err
 	}
 	// 初始化HTTP服务
@@ -113,6 +115,7 @@ func Run(ctx context.Context, opts ...Option) error {
 	signal.Notify(sc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	cleanFunc, err := Init(ctx, opts...)
 	if err != nil {
+		logger.Printf(ctx, "%s", err)
 		return err
 	}
 

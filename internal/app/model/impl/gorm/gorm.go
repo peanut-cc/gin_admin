@@ -10,6 +10,9 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/peanut-pg/gin_admin/pkg/logger"
+
+	// gorm存储注入
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 // Config 配置参数
