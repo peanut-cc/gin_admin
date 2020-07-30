@@ -1,9 +1,27 @@
 package entity
 
 import (
+	"context"
+
+	"github.com/jinzhu/gorm"
 	"github.com/peanut-pg/gin_admin/internal/app/schema"
 	"github.com/peanut-pg/gin_admin/pkg/util"
 )
+
+// GetDemoDB 获取demo存储
+func GetDemoDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+	return GetDBWithModel(ctx, defDB, new(Demo))
+}
+
+// SchemaDemo demo对象
+type SchemaDemo schema.Demo
+
+// ToDemo 转换为demo实体
+func (a SchemaDemo) ToDemo() *Demo {
+	item := new(Demo)
+	util.StructMapToStruct(a, item)
+	return item
+}
 
 // Demo demo实体
 type Demo struct {
