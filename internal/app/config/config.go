@@ -68,8 +68,10 @@ type Log struct {
 }
 
 type Config struct {
+	Menu        Menu
 	RunMode     string
 	PrintConfig bool
+	Casbin      Casbin
 	Root        Root
 	HTTP        HTTP
 	Log         Log
@@ -80,6 +82,15 @@ type Config struct {
 	JWTAuth     JWTAuth
 	Redis       Redis
 	RateLimiter RateLimiter
+}
+
+// Casbin casbin配置参数
+type Casbin struct {
+	Enable           bool
+	Debug            bool
+	Model            string
+	AutoLoad         bool
+	AutoLoadInternal int
 }
 
 // RateLimiter 请求频率限制配置参数
@@ -133,6 +144,12 @@ type Gorm struct {
 	MaxIdleConns      int
 	TablePrefix       string
 	EnableAutoMigrate bool
+}
+
+// Menu 菜单配置参数
+type Menu struct {
+	Enable bool
+	Data   string
 }
 
 // MySQL mysql配置参数

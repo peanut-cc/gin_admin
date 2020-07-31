@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/peanut-pg/gin_admin/internal/app/api"
@@ -20,8 +21,13 @@ type IRouter interface {
 
 // Router 路由管理器
 type Router struct {
-	Auth    auth.Auther
-	UserAPI *api.User
+	Auth           auth.Auther
+	CasbinEnforcer *casbin.SyncedEnforcer
+	DemoAPI        *api.Demo
+	LoginAPI       *api.Login
+	MenuAPI        *api.Menu
+	RoleAPI        *api.Role
+	UserAPI        *api.User
 }
 
 // Register 注册路由

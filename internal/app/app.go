@@ -64,6 +64,15 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 		logger.Printf(ctx, "%s", err)
 		return nil, err
 	}
+
+	// 初始化菜单数据
+	if config.C.Menu.Enable && config.C.Menu.Data != "" {
+		err = injector.MenuBll.InitData(ctx, config.C.Menu.Data)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	// 初始化HTTP服务
 	httpServerCleanFunc := InitHTTPServer(ctx, injector.Engine)
 	return func() {

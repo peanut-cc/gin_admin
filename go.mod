@@ -4,8 +4,10 @@ go 1.14
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
+	github.com/LyricTian/captcha v1.1.0
 	github.com/LyricTian/structs v1.1.1
 	github.com/bwmarrin/snowflake v0.3.0
+	github.com/casbin/casbin/v2 v2.8.6
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/camelcase v1.0.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
@@ -22,4 +24,5 @@ require (
 	github.com/sirupsen/logrus v1.6.0
 	github.com/tidwall/buntdb v1.1.2
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e
+	gopkg.in/yaml.v2 v2.3.0
 )

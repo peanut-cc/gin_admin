@@ -3,6 +3,7 @@ package bll
 import (
 	"context"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/peanut-pg/gin_admin/internal/app/iutil"
 
 	"github.com/google/wire"
@@ -20,6 +21,7 @@ var UserSet = wire.NewSet(wire.Struct(new(User), "*"), wire.Bind(new(bll.IUser),
 
 // User 用户管理
 type User struct {
+	Enforcer      *casbin.SyncedEnforcer
 	TransModel    model.ITrans
 	UserModel     model.IUser
 	UserRoleModel model.IUserRole
@@ -102,7 +104,7 @@ func (a *User) Create(ctx context.Context, item schema.User) (*schema.IDResult, 
 		return nil, err
 	}
 
-	//LoadCasbinPolicy(ctx, a.Enforcer)
+	LoadCasbinPolicy(ctx, a.Enforcer)
 	return schema.NewIDResult(item.ID), nil
 }
 
@@ -170,7 +172,7 @@ func (a *User) Update(ctx context.Context, id string, item schema.User) error {
 		return err
 	}
 
-	//LoadCasbinPolicy(ctx, a.Enforcer)
+	LoadCasbinPolicy(ctx, a.Enforcer)
 	return nil
 }
 
@@ -213,7 +215,7 @@ func (a *User) Delete(ctx context.Context, id string) error {
 		return err
 	}
 
-	//LoadCasbinPolicy(ctx, a.Enforcer)
+	LoadCasbinPolicy(ctx, a.Enforcer)
 	return nil
 }
 
@@ -232,6 +234,6 @@ func (a *User) UpdateStatus(ctx context.Context, id string, status int) error {
 		return err
 	}
 
-	//LoadCasbinPolicy(ctx, a.Enforcer)
+	LoadCasbinPolicy(ctx, a.Enforcer)
 	return nil
 }

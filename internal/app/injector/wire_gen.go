@@ -9,6 +9,7 @@ import (
 	"github.com/peanut-pg/gin_admin/internal/app/api"
 	"github.com/peanut-pg/gin_admin/internal/app/bll/impl/bll"
 	"github.com/peanut-pg/gin_admin/internal/app/model/impl/gorm/model"
+	"github.com/peanut-pg/gin_admin/internal/app/module/adapter"
 	"github.com/peanut-pg/gin_admin/internal/app/router"
 )
 
@@ -24,7 +25,13 @@ func BuildInjector() (*Injector, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	trans := &model.Trans{
+	role := &model.Role{
+		DB: db,
+	}
+	roleMenu := &model.RoleMenu{
+		DB: db,
+	}
+	menuActionResource := &model.MenuActionResource{
 		DB: db,
 	}
 	user := &model.User{
@@ -33,10 +40,70 @@ func BuildInjector() (*Injector, func(), error) {
 	userRole := &model.UserRole{
 		DB: db,
 	}
-	role := &model.Role{
+	casbinAdapter := &adapter.CasbinAdapter{
+		RoleModel:         role,
+		RoleMenuModel:     roleMenu,
+		MenuResourceModel: menuActionResource,
+		UserModel:         user,
+		UserRoleModel:     userRole,
+	}
+	syncedEnforcer, cleanup3, err := InitCasbin(casbinAdapter)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	demo := &model.Demo{
 		DB: db,
 	}
+	bllDemo := &bll.Demo{
+		DemoModel: demo,
+	}
+	apiDemo := &api.Demo{
+		DemoBll: bllDemo,
+	}
+	menu := &model.Menu{
+		DB: db,
+	}
+	menuAction := &model.MenuAction{
+		DB: db,
+	}
+	login := &bll.Login{
+		Auth:            auther,
+		UserModel:       user,
+		UserRoleModel:   userRole,
+		RoleModel:       role,
+		RoleMenuModel:   roleMenu,
+		MenuModel:       menu,
+		MenuActionModel: menuAction,
+	}
+	apiLogin := &api.Login{
+		LoginBll: login,
+	}
+	trans := &model.Trans{
+		DB: db,
+	}
+	bllMenu := &bll.Menu{
+		TransModel:              trans,
+		MenuModel:               menu,
+		MenuActionModel:         menuAction,
+		MenuActionResourceModel: menuActionResource,
+	}
+	apiMenu := &api.Menu{
+		MenuBll: bllMenu,
+	}
+	bllRole := &bll.Role{
+		Enforcer:      syncedEnforcer,
+		TransModel:    trans,
+		RoleModel:     role,
+		RoleMenuModel: roleMenu,
+		UserModel:     user,
+	}
+	apiRole := &api.Role{
+		RoleBll: bllRole,
+	}
 	bllUser := &bll.User{
+		Enforcer:      syncedEnforcer,
 		TransModel:    trans,
 		UserModel:     user,
 		UserRoleModel: userRole,
@@ -46,15 +113,23 @@ func BuildInjector() (*Injector, func(), error) {
 		UserBll: bllUser,
 	}
 	routerRouter := &router.Router{
-		Auth:    auther,
-		UserAPI: apiUser,
+		Auth:           auther,
+		CasbinEnforcer: syncedEnforcer,
+		DemoAPI:        apiDemo,
+		LoginAPI:       apiLogin,
+		MenuAPI:        apiMenu,
+		RoleAPI:        apiRole,
+		UserAPI:        apiUser,
 	}
 	engine := InitGinEngine(routerRouter)
 	injector := &Injector{
-		Engine: engine,
-		Auth:   auther,
+		Engine:         engine,
+		Auth:           auther,
+		CasbinEnforcer: syncedEnforcer,
+		MenuBll:        bllMenu,
 	}
 	return injector, func() {
+		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil

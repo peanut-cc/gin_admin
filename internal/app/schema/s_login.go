@@ -22,6 +22,11 @@ type UpdatePasswordParam struct {
 	NewPassword string `json:"new_password" binding:"required"` // 新密码(md5加密)
 }
 
+// LoginCaptcha 登录验证码
+type LoginCaptcha struct {
+	CaptchaID string `json:"captcha_id"` // 验证码ID
+}
+
 // LoginTokenInfo 登录令牌信息
 type LoginTokenInfo struct {
 	AccessToken string `json:"access_token"` // 访问令牌
